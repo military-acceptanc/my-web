@@ -1314,302 +1314,62 @@
   buildWishOptions();
   softReset("اكتب البيانات ثم اضغط “عرض التحليل العميق”.");
 </script>
-<!-- ================== FREE OFFLINE "AI" CHAT (Responsive + RTL) ================== -->
+<!-- ====== LUX AI WIDGET (Compact + RTL + No Google Links) ====== -->
 <style>
   :root{
     --ai-z: 999999;
-    --ai-bg: rgba(10,12,16,.92);
-    --ai-surface: rgba(255,255,255,.06);
-    --ai-border: rgba(255,255,255,.12);
+    --ai-bg: rgba(12,14,18,.78);
+    --ai-bg2: rgba(255,255,255,.04);
+    --ai-border: rgba(255,255,255,.10);
     --ai-text: rgba(255,255,255,.92);
-    --ai-muted: rgba(255,255,255,.70);
-    --ai-green: #22c55e;
-    --ai-greenText: #06130a;
-    --ai-radius: 18px;
+    --ai-muted: rgba(255,255,255,.60);
+    --ai-accent: #22c55e;
+    --ai-accentText: #06110a;
+    --ai-radius: 16px;
+    --ai-shadow: 0 18px 60px rgba(0,0,0,.55);
   }
 
+  /* Floating button */
   .ai-fab{
-    position: fixed;
-    left: 16px;
-    bottom: 16px;
-    z-index: var(--ai-z);
-  }
-  .ai-open{
-    border: 1px solid var(--ai-border);
-    background: rgba(34,197,94,.16);
-    backdrop-filter: blur(10px);
-    color: var(--ai-text);
-    border-radius: 999px;
-    padding: 12px 14px;
-    font-weight: 900;
-    cursor: pointer;
-    min-height: 48px;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    user-select: none;
-  }
-  .ai-pill{
-    background: rgba(34,197,94,.25);
-    border: 1px solid rgba(34,197,94,.35);
-    padding: 4px 10px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 900;
-  }
-
-  .ai-panel{
-    position: fixed;
-    left: 16px;
-    bottom: 76px;
-    z-index: var(--ai-z);
-    width: min(540px, calc(100vw - 32px));
-    height: min(680px, calc(100vh - 120px));
-    background: var(--ai-bg);
-    border: 1px solid var(--ai-border);
-    border-radius: var(--ai-radius);
-    box-shadow: 0 18px 60px rgba(0,0,0,.55);
-    backdrop-filter: blur(14px);
-    overflow: hidden;
-    display: none;
-    direction: rtl;
-  }
-
-  .ai-head{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    padding: 12px;
-    border-bottom: 1px solid var(--ai-border);
-    background: rgba(255,255,255,.03);
-  }
-  .ai-title{
-    min-width: 0;
-    display:flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-  .ai-title strong{
-    color: var(--ai-text);
-    font-weight: 1000;
-    font-size: 14px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .ai-title span{
-    color: var(--ai-muted);
-    font-size: 12px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .ai-close{
-    border: 1px solid var(--ai-border);
-    background: rgba(255,255,255,.06);
-    color: var(--ai-text);
-    border-radius: 12px;
-    padding: 10px 12px;
-    cursor: pointer;
-    font-weight: 1000;
-  }
-
-  .ai-body{
-    height: calc(100% - 56px - 176px);
-    padding: 12px;
-    overflow: auto;
-    scroll-behavior: smooth;
-  }
-
-  .ai-msg{ display:flex; margin: 10px 0; }
-  .ai-msg.user{ justify-content:flex-start; }
-  .ai-msg.bot{ justify-content:flex-end; }
-
-  .ai-bubble{
-    max-width: 92%;
-    padding: 10px 12px;
-    border-radius: 16px;
-    line-height: 1.7;
-    font-size: 14px;
-    font-weight: 800;
-    border: 1px solid var(--ai-border);
-    white-space: pre-wrap;
-    word-break: break-word;
-    background: var(--ai-surface);
-    color: var(--ai-text);
-  }
-  .ai-msg.bot .ai-bubble{
-    background: rgba(34,197,94,.18);
-    border-color: rgba(34,197,94,.26);
-  }
-
-  .ai-foot{
-    height: 176px;
-    padding: 12px;
-    border-top: 1px solid var(--ai-border);
-    background: rgba(0,0,0,.28);
-    display:flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .ai-label{
-    font-size: 12px;
-    font-weight: 1000;
-    color: rgba(255,255,255,.78);
-  }
-  .ai-compose{
-    flex: 1;
-    display:flex;
-    gap: 10px;
-    align-items: stretch;
-  }
-  .ai-input{
-    flex:1;
-    width: 100%;
-    min-height: 112px;
-    max-height: 240px;
-    resize: none;
-    border: 1px solid var(--ai-border);
-    background: rgba(255,255,255,.06);
-    color: var(--ai-text);
-    border-radius: 14px;
-    padding: 12px;
-    outline: none;
-    font-weight: 800;
-    font-size: 14px;
-    line-height: 1.7;
-  }
-  .ai-send{
-    width: 130px;
-    border: 0;
-    background: var(--ai-green);
-    color: var(--ai-greenText);
-    border-radius: 14px;
-    padding: 12px 14px;
-    font-weight: 1000;
-    cursor: pointer;
-    white-space: nowrap;
-  }
-  .ai-send:disabled{ opacity:.55; cursor:not-allowed; }
-
-  .ai-note{
-    font-size: 12px;
-    color: rgba(255,255,255,.62);
-    line-height: 1.5;
-  }
-
-  @media (max-width: 560px){
-    .ai-panel{
-      left: 10px;
-      bottom: 70px;
-      width: calc(100vw - 20px);
-      height: calc(100vh - 110px);
-      border-radius: 16px;
-    }
-    .ai-body{ height: calc(100% - 56px - 210px); }
-    .ai-foot{
-      height: 210px;
-      padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-    }
-    .ai-compose{ flex-direction: column; }
-    .ai-send{ width: 100%; min-height: 48px; }
-    .ai-input{ min-height: 140px; }
-  }
-</style>
-
-<div class="ai-fab">
-  <button class="ai-open" id="aiOpenBtn" type="button">
-    💬 <span>مساعد القبول</span>
-    <span class="ai-pill" id="aiStatus">مجاني</span>
-  </button>
-</div>
-
-<section class="ai-panel" id="aiPanel" aria-label="مساعد القبول العسكري">
-  <header class="ai-head">
-    <div class="ai-title">
-      <strong>مساعد القبول العسكري (توعوي)</strong>
-      <span>إجابات إرشادية + خطة تحسين مختصرة</span>
-    </div>
-    <button class="ai-close" id="aiCloseBtn" type="button">إغلاق</button>
-  </header>
-
-  <div class="ai-body" id="aiBody">
-    <div class="ai-msg bot">
-      <div class="ai-bubble">
-هلا 👋
-اكتب سؤالك، أو اكتب بياناتك بهذا الشكل:
-"معدل 86، قدرات 72، تحصيلي 68، STEP 55، سنة التخرج 2022، عندي دورات …"
-وأعطيك نقاط قوة/ضعف + خطوات تحسين.
-      </div>
-    </div>
-  </div>
-
-  <footer class="ai-foot">
-    <div class="ai-label">اكتب سؤالك هنا (Enter = إرسال، Shift+Enter سطر جديد)</div>
-    <div class="ai-compose">
-      <textarea class="ai-input" id="aiInput" placeholder="مثال: لي سنين أقدم وما يجيني قبول… وش أركز عليه؟"></textarea>
-      <button class="ai-send" id="aiSendBtn" type="button">إرسال</button>
-    </div>
-    <div class="ai-note">
-تنبيه: هذا مساعد توعوي غير تابع لأي جهة رسمية. المرجع النهائي هو الإعلان الرسمي وشروطه.
-    </div>
-  </footer>
-</section>
-
-<script>
-<!-- ===== AI WIDGET (ONLY) - Paste before </body> ===== -->
-<style>
-  :root{
-    --ai-z: 999999;
-    --ai-bg: rgba(14,18,24,.92);
-    --ai-border: rgba(255,255,255,.12);
-    --ai-text: rgba(255,255,255,.92);
-    --ai-muted: rgba(255,255,255,.62);
-    --ai-green: #22c55e;
-    --ai-greenText: #06110a;
-    --ai-radius: 18px;
-    --ai-shadow: 0 24px 80px rgba(0,0,0,.55);
-  }
-
-  .ai-fab{
-    position:fixed; left:18px; bottom:18px;
+    position:fixed;
+    left:16px; bottom:16px;
     z-index:var(--ai-z);
   }
   .ai-open{
     display:flex; align-items:center; gap:10px;
-    border:1px solid var(--ai-border);
-    background: rgba(34,197,94,.12);
-    backdrop-filter: blur(12px);
-    color: var(--ai-text);
+    padding:10px 12px;
     border-radius:999px;
-    padding:12px 14px;
-    font-weight:1000;
+    border:1px solid var(--ai-border);
+    background: rgba(34,197,94,.10);
+    backdrop-filter: blur(14px);
+    color: var(--ai-text);
+    box-shadow: 0 10px 28px rgba(0,0,0,.35);
     cursor:pointer;
-    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    font-weight: 1000;
     user-select:none;
   }
   .ai-status{
     font-size:12px;
     padding:4px 10px;
     border-radius:999px;
-    background: rgba(255,255,255,.10);
     border:1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.08);
     color: var(--ai-text);
     font-weight: 900;
   }
 
+  /* Panel (smaller + luxurious) */
   .ai-panel{
     position:fixed;
-    left:18px; bottom:78px;
+    left:16px; bottom:72px;
     z-index:var(--ai-z);
-    width: min(560px, calc(100vw - 36px));
-    height: min(680px, calc(100vh - 120px));
+    width: min(420px, calc(100vw - 32px));   /* أصغر */
+    height: min(560px, calc(100vh - 120px)); /* أصغر */
     background: var(--ai-bg);
     border:1px solid var(--ai-border);
     border-radius: var(--ai-radius);
     box-shadow: var(--ai-shadow);
-    backdrop-filter: blur(16px);
+    backdrop-filter: blur(18px);
     overflow:hidden;
     display:none;
     direction: rtl;
@@ -1617,53 +1377,62 @@
 
   .ai-head{
     display:flex; align-items:center; justify-content:space-between; gap:10px;
-    padding:12px;
+    padding:10px 12px;
     border-bottom:1px solid var(--ai-border);
     background: rgba(255,255,255,.03);
   }
   .ai-title{ min-width:0; display:flex; flex-direction:column; gap:2px; }
-  .ai-title strong{ font-size:14px; font-weight:1000; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .ai-title span{ font-size:12px; color:var(--ai-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-
+  .ai-title strong{
+    font-size:13px; font-weight:1000;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .ai-title span{
+    font-size:12px; color:var(--ai-muted);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
   .ai-actions{ display:flex; gap:8px; }
   .ai-btn{
     border:1px solid var(--ai-border);
     background: rgba(255,255,255,.06);
     color: var(--ai-text);
     border-radius: 12px;
-    padding: 10px 12px;
+    padding: 8px 10px;
     cursor:pointer;
     font-weight: 1000;
+    font-size: 12px;
   }
-  .ai-btn:hover{ background: rgba(255,255,255,.08); }
 
-  .ai-topbar{
+  .ai-bar{
     display:flex; gap:10px; align-items:center; flex-wrap:wrap;
-    padding:10px 12px;
+    padding:8px 12px;
     border-bottom:1px solid var(--ai-border);
     background: rgba(255,255,255,.02);
   }
   .ai-chip{
     display:flex; align-items:center; gap:8px;
-    padding:8px 10px;
+    padding:7px 10px;
     border-radius:12px;
-    background: rgba(255,255,255,.08);
+    background: rgba(255,255,255,.07);
     border:1px solid rgba(255,255,255,.10);
     font-size:12px; font-weight:900;
+    color: var(--ai-text);
   }
   .ai-select{
     border:1px solid rgba(255,255,255,.14);
     background: rgba(255,255,255,.06);
     color: var(--ai-text);
     border-radius: 12px;
-    padding: 8px 10px;
+    padding: 7px 10px;
     font-weight: 900;
     outline:none;
+    font-size: 12px;
   }
-  .ai-info{ font-size:12px; color:var(--ai-muted); font-weight:800; }
+  .ai-info{
+    font-size:12px; color:var(--ai-muted); font-weight:800;
+  }
 
   .ai-body{
-    height: calc(100% - 54px - 54px - 140px);
+    height: calc(100% - 48px - 44px - 116px); /* أصغر */
     padding:12px;
     overflow:auto;
     scroll-behavior:smooth;
@@ -1671,29 +1440,29 @@
   .ai-msg{ display:flex; margin:10px 0; }
   .ai-msg.user{ justify-content:flex-start; }
   .ai-msg.bot{ justify-content:flex-end; }
-
   .ai-bubble{
     max-width: 92%;
-    padding: 12px 12px;
-    border-radius: 16px;
+    padding: 10px 12px;
+    border-radius: 14px;
     border:1px solid var(--ai-border);
     white-space: pre-wrap;
     word-break: break-word;
-    line-height: 1.8;
-    font-size: 14px;
+    line-height: 1.85;
+    font-size: 13px;          /* أصغر */
     font-weight: 850;
   }
   .ai-msg.user .ai-bubble{ background: rgba(255,255,255,.06); }
   .ai-msg.bot .ai-bubble{
-    background: rgba(34,197,94,.16);
-    border-color: rgba(34,197,94,.20);
+    background: rgba(34,197,94,.14);
+    border-color: rgba(34,197,94,.18);
   }
 
+  /* Footer (smaller input + smaller send) */
   .ai-footer{
-    height: 140px;
+    height: 116px; /* أصغر */
     padding:12px;
     border-top:1px solid var(--ai-border);
-    background: rgba(0,0,0,.25);
+    background: rgba(0,0,0,.22);
     display:flex;
     flex-direction:column;
     gap:10px;
@@ -1707,48 +1476,54 @@
     background: rgba(255,255,255,.06);
     color: var(--ai-text);
     border-radius: 14px;
-    padding: 12px;
+    padding: 10px 12px;
     outline:none;
     font-weight: 850;
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1.7;
-    min-height: 64px;
-    max-height: 120px;
+    min-height: 56px;   /* أصغر */
+    max-height: 96px;
   }
   .ai-send{
-    width: 110px;
+    width: 92px; /* أصغر */
     border:0;
-    background: var(--ai-green);
-    color: var(--ai-greenText);
+    background: var(--ai-accent);
+    color: var(--ai-accentText);
     border-radius: 14px;
-    padding: 12px 14px;
+    padding: 10px 12px;
     font-weight: 1100;
     cursor:pointer;
     white-space: nowrap;
+    font-size: 13px;
   }
   .ai-send:disabled{ opacity:.6; cursor:not-allowed; }
 
   .ai-hint{
     display:flex; justify-content:space-between; gap:10px; align-items:center;
-    font-size:12px; color: var(--ai-muted); font-weight:800;
+    font-size:11px; color: var(--ai-muted); font-weight:800;
   }
   .ai-hint span{
     background: rgba(255,255,255,.06);
     border:1px solid rgba(255,255,255,.08);
-    padding:6px 10px;
+    padding:5px 9px;
     border-radius:999px;
   }
 
   @media (max-width:520px){
-    .ai-panel{ left:10px; bottom:70px; width:calc(100vw - 20px); height:calc(100vh - 110px); border-radius:16px; }
-    .ai-body{ height: calc(100% - 54px - 74px - 160px); }
+    .ai-panel{
+      left:10px; bottom:64px;
+      width: calc(100vw - 20px);
+      height: calc(100vh - 110px);
+      border-radius: 16px;
+    }
+    .ai-body{ height: calc(100% - 48px - 56px - 140px); }
     .ai-footer{
-      height:160px;
+      height: 140px;
       padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
     }
     .ai-row{ flex-direction:column; }
-    .ai-send{ width:100%; min-height:48px; }
-    .ai-input{ min-height:72px; }
+    .ai-send{ width:100%; min-height:46px; }
+    .ai-input{ min-height:66px; }
   }
 </style>
 
@@ -1763,7 +1538,7 @@
   <header class="ai-head">
     <div class="ai-title">
       <strong>مساعد القبول العسكري</strong>
-      <span>ذكاء اصطناعي محلي داخل المتصفح</span>
+      <span>إرشاد عام + خطة تحسين</span>
     </div>
     <div class="ai-actions">
       <button class="ai-btn" id="aiResetBtn" type="button">مسح</button>
@@ -1771,22 +1546,22 @@
     </div>
   </header>
 
-  <div class="ai-topbar">
+  <div class="ai-bar">
     <div class="ai-chip">
       الموديل
       <select class="ai-select" id="aiModelSel">
         <option value="Llama-3.1-8B-Instruct-q4f32_1">Llama 3.1 8B (أقوى)</option>
         <option value="Llama-3.2-3B-Instruct-q4f32_1">Llama 3.2 3B (أخف)</option>
-        <option value="Phi-3.5-mini-instruct-q4f32_1">Phi 3.5 mini (خفيف جدًا)</option>
+        <option value="Phi-3.5-mini-instruct-q4f32_1">Phi 3.5 mini (خفيف)</option>
       </select>
     </div>
-    <div class="ai-info" id="aiInfo">جاهز. افتح الشات وابدأ.</div>
+    <div class="ai-info" id="aiInfo">جاهز.</div>
   </div>
 
   <div class="ai-body" id="aiBody">
     <div class="ai-msg bot">
       <div class="ai-bubble">
-        هلا 👋 اكتب سؤالك عن القبول/تحسين الملف (قدرات/تحصيلي/STEP/دورات/سنة التخرج…).
+        هلا 👋 اكتب سؤالك عن القبول أو تحسين ملفك (قدرات/تحصيلي/STEP/دورات/سنة التخرج…).
       </div>
     </div>
   </div>
@@ -1828,7 +1603,9 @@
         role: "system",
         content:
 `أنت مساعد عربي متخصص في إرشاد القبول العسكري داخل السعودية بشكل توعوي.
-اكتب ردودك بشكل منظم: (ملخص سريع + نقاط + خطة قصيرة).
+أسلوب الرد: رسمي وواضح ومختصر ثم خطة.
+ممنوع تمامًا: اقتراح "افتح هذا البحث" أو وضع روابط Google أو أي رابط بحث.
+إذا احتجت مصدر: قل "راجع الإعلان الرسمي في الجهة" بدون روابط.
 لا تزعم أنك جهة رسمية ولا تقدم وعود قبول.
 إذا نقصت معلومات اسأل أسئلة محددة.`
       }
@@ -1850,6 +1627,28 @@
       .replaceAll('"',"&quot;")
       .replaceAll("'","&#039;");
   }
+
+  // إزالة أي روابط/سطر "افتح هذا البحث" نهائيًا (حتى لو الموديل حاول يكتبها)
+  function sanitizeAnswer(text){
+    let t = String(text || "");
+
+    // احذف أي سطر يحتوي على "افتح هذا البحث" أو "إذا تبغى المصدر الرسمي"
+    t = t.replace(/^.*(افتح هذا البحث|إذا تبغى المصدر الرسمي).*$/gmi, "");
+
+    // احذف روابط Google search بالكامل
+    t = t.replace(/https?:\/\/(www\.)?google\.com\/search\?[^\s]+/gmi, "");
+    t = t.replace(/https?:\/\/(www\.)?google\.[^\s]+/gmi, ""); // احتياط
+
+    // احذف أي URL بشكل عام لو تبغى (اختياري) — حاليًا نخلي الروابط عامة مسموحة؟
+    // لو تبي منع الروابط كلها نهائيًا فك السطرين الجاي:
+    // t = t.replace(/https?:\/\/\S+/gmi, "");
+    // t = t.replace(/www\.\S+/gmi, "");
+
+    // نظافة فراغات
+    t = t.replace(/\n{3,}/g, "\n\n").trim();
+    return t || "تمام. اكتب تفاصيل أكثر (المعدل/القدرات/التحصيلي/الطول/الوزن/العمر) عشان أعطيك خطة دقيقة.";
+  }
+
   function addMsg(role, text){
     const wrap = document.createElement("div");
     wrap.className = "ai-msg " + (role === "user" ? "user" : "bot");
@@ -1879,7 +1678,7 @@
 
     const modelId = ui.modelSel.value;
     setStatus("تحميل…");
-    ui.info.textContent = "جاري تشغيل الموديل محليًا…";
+    ui.info.textContent = "جاري تشغيل الذكاء محليًا…";
 
     try{
       const initProgressCallback = (r)=>{
@@ -1893,9 +1692,9 @@
     }catch(e){
       console.error(e);
       state.ready = false;
-      ui.info.textContent = "فشل تشغيل الموديل. جرّب موديل أخف أو متصفح Chrome/Edge.";
+      ui.info.textContent = "فشل التشغيل. جرّب موديل أخف أو Chrome/Edge.";
       setStatus("غير متاح");
-      addMsg("assistant","ما قدرت أشغّل الذكاء الاصطناعي محليًا على هذا الجهاز/المتصفح. اختر موديل أخف أو افتح الموقع بمتصفح Chrome/Edge.");
+      addMsg("assistant","ما قدرت أشغّل الذكاء محليًا على هذا الجهاز/المتصفح. اختر موديل أخف أو افتح الموقع بمتصفح Chrome/Edge.");
       return false;
     }
   }
@@ -1904,7 +1703,6 @@
     const q = (ui.input.value || "").trim();
     if(!q || state.busy) return;
 
-    // شغّل المحرك عند أول رسالة
     if(!state.ready){
       const ok = await ensureEngine();
       if(!ok) return;
@@ -1921,8 +1719,8 @@
     try{
       const stream = await state.engine.chat.completions.create({
         messages: state.messages.slice(-16),
-        temperature: 0.7,
-        max_tokens: 750,
+        temperature: 0.65,
+        max_tokens: 800,
         stream: true,
       });
 
@@ -1930,16 +1728,14 @@
       for await (const chunk of stream){
         const delta = chunk?.choices?.[0]?.delta?.content || "";
         out += delta;
-        bubble.textContent = out || "…";
+        bubble.textContent = sanitizeAnswer(out) || "…";
         scrollBottom();
       }
 
-      if(!out.trim()){
-        wrap.remove();
-        addMsg("assistant","ما طلع رد واضح. جرّب صياغة ثانية.");
-      }else{
-        state.messages.push({ role:"assistant", content: out });
-      }
+      const finalText = sanitizeAnswer(out);
+      wrap.remove();
+      addMsg("assistant", finalText);
+      state.messages.push({ role:"assistant", content: finalText });
 
     }catch(e){
       console.error(e);
@@ -1950,28 +1746,26 @@
     }
   }
 
-  // فتح/إغلاق
+  // open/close
   ui.openBtn.onclick = ()=>{
     ui.panel.style.display = "block";
-    setTimeout(()=> ui.input.focus(), 50);
+    setTimeout(()=> ui.input.focus(), 40);
     scrollBottom();
   };
   ui.closeBtn.onclick = ()=> ui.panel.style.display = "none";
 
-  // مسح
+  // reset
   ui.resetBtn.onclick = ()=>{
     ui.body.innerHTML = `
       <div class="ai-msg bot">
-        <div class="ai-bubble">هلا 👋 اكتب سؤالك عن القبول/تحسين الملف (قدرات/تحصيلي/STEP/دورات/سنة التخرج…).<\/div>
+        <div class="ai-bubble">هلا 👋 اكتب سؤالك عن القبول أو تحسين ملفك (قدرات/تحصيلي/STEP/دورات/سنة التخرج…).<\/div>
       </div>`;
     state.messages = state.messages.filter(m => m.role === "system");
     scrollBottom();
   };
 
-  // إرسال
   ui.sendBtn.onclick = send;
 
-  // Enter إرسال | Shift+Enter سطر جديد
   ui.input.addEventListener("keydown",(e)=>{
     if(e.key === "Enter" && !e.shiftKey){
       e.preventDefault();
@@ -1979,7 +1773,6 @@
     }
   });
 
-  // تغيير الموديل = إعادة تهيئة
   ui.modelSel.addEventListener("change", ()=>{
     state.engine = null;
     state.ready = false;
@@ -1989,10 +1782,11 @@
 
   setStatus("جاهز");
 </script>
-<!-- ===== END AI WIDGET ===== -->
+<!-- ====== END LUX AI WIDGET ====== -->
 </body>
 
 </html>
+
 
 
 
