@@ -1314,311 +1314,277 @@
   buildWishOptions();
   softReset("اكتب البيانات ثم اضغط “عرض التحليل العميق”.");
 </script>
-<!-- ====== LUX AI WIDGET (Compact + RTL + No Google Links) ====== -->
+<!-- ================== AI CHAT WIDGET (Luxury + Responsive + RTL) ================== -->
 <style>
   :root{
     --ai-z: 999999;
-    --ai-bg: rgba(12,14,18,.78);
-    --ai-bg2: rgba(255,255,255,.04);
-    --ai-border: rgba(255,255,255,.10);
+    --ai-bg: rgba(12,14,18,.92);
+    --ai-surface: rgba(255,255,255,.06);
+    --ai-border: rgba(255,255,255,.12);
     --ai-text: rgba(255,255,255,.92);
-    --ai-muted: rgba(255,255,255,.60);
+    --ai-muted: rgba(255,255,255,.62);
     --ai-accent: #22c55e;
-    --ai-accentText: #06110a;
-    --ai-radius: 16px;
+    --ai-accentText: #07150b;
+    --ai-radius: 18px;
     --ai-shadow: 0 18px 60px rgba(0,0,0,.55);
   }
 
-  /* Floating button */
   .ai-fab{
     position:fixed;
-    left:16px; bottom:16px;
+    bottom:18px;
+    left:18px;
     z-index:var(--ai-z);
   }
   .ai-open{
-    display:flex; align-items:center; gap:10px;
-    padding:10px 12px;
-    border-radius:999px;
     border:1px solid var(--ai-border);
-    background: rgba(34,197,94,.10);
-    backdrop-filter: blur(14px);
+    background: linear-gradient(180deg, rgba(34,197,94,.18), rgba(34,197,94,.10));
+    backdrop-filter: blur(10px);
     color: var(--ai-text);
-    box-shadow: 0 10px 28px rgba(0,0,0,.35);
+    border-radius: 999px;
+    padding: 12px 14px;
+    font-weight: 900;
     cursor:pointer;
-    font-weight: 1000;
+    min-height: 46px;
+    display:flex;
+    align-items:center;
+    gap:10px;
     user-select:none;
   }
-  .ai-status{
-    font-size:12px;
-    padding:4px 10px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,.12);
-    background: rgba(255,255,255,.08);
+  .ai-pill{
+    background: rgba(255,255,255,.10);
+    border:1px solid rgba(255,255,255,.14);
     color: var(--ai-text);
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
     font-weight: 900;
   }
 
-  /* Panel (smaller + luxurious) */
+  /* Panel (hidden -> open with transform) */
   .ai-panel{
     position:fixed;
-    left:16px; bottom:72px;
+    bottom:78px;
+    left:18px;
     z-index:var(--ai-z);
-    width: min(420px, calc(100vw - 32px));   /* أصغر */
-    height: min(560px, calc(100vh - 120px)); /* أصغر */
+    width: min(460px, calc(100vw - 36px));
+    height: min(560px, calc(100vh - 140px));
     background: var(--ai-bg);
     border:1px solid var(--ai-border);
     border-radius: var(--ai-radius);
     box-shadow: var(--ai-shadow);
-    backdrop-filter: blur(18px);
+    backdrop-filter: blur(14px);
     overflow:hidden;
-    display:none;
     direction: rtl;
+
+    opacity:0;
+    transform: translateY(12px) scale(.98);
+    pointer-events:none;
+    transition: opacity .18s ease, transform .18s ease;
+  }
+  .ai-panel.open{
+    opacity:1;
+    transform: translateY(0) scale(1);
+    pointer-events:auto;
   }
 
   .ai-head{
-    display:flex; align-items:center; justify-content:space-between; gap:10px;
-    padding:10px 12px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:12px 12px;
     border-bottom:1px solid var(--ai-border);
     background: rgba(255,255,255,.03);
   }
-  .ai-title{ min-width:0; display:flex; flex-direction:column; gap:2px; }
+  .ai-title{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    min-width:0;
+  }
   .ai-title strong{
-    font-size:13px; font-weight:1000;
-    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    font-weight:1000;
+    color: var(--ai-text);
+    font-size: 14px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
   }
   .ai-title span{
-    font-size:12px; color:var(--ai-muted);
-    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    font-size:12px;
+    color: var(--ai-muted);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
   }
-  .ai-actions{ display:flex; gap:8px; }
-  .ai-btn{
+
+  .ai-close{
     border:1px solid var(--ai-border);
     background: rgba(255,255,255,.06);
     color: var(--ai-text);
     border-radius: 12px;
-    padding: 8px 10px;
+    padding: 10px 12px;
     cursor:pointer;
     font-weight: 1000;
-    font-size: 12px;
-  }
-
-  .ai-bar{
-    display:flex; gap:10px; align-items:center; flex-wrap:wrap;
-    padding:8px 12px;
-    border-bottom:1px solid var(--ai-border);
-    background: rgba(255,255,255,.02);
-  }
-  .ai-chip{
-    display:flex; align-items:center; gap:8px;
-    padding:7px 10px;
-    border-radius:12px;
-    background: rgba(255,255,255,.07);
-    border:1px solid rgba(255,255,255,.10);
-    font-size:12px; font-weight:900;
-    color: var(--ai-text);
-  }
-  .ai-select{
-    border:1px solid rgba(255,255,255,.14);
-    background: rgba(255,255,255,.06);
-    color: var(--ai-text);
-    border-radius: 12px;
-    padding: 7px 10px;
-    font-weight: 900;
-    outline:none;
-    font-size: 12px;
-  }
-  .ai-info{
-    font-size:12px; color:var(--ai-muted); font-weight:800;
   }
 
   .ai-body{
-    height: calc(100% - 48px - 44px - 116px); /* أصغر */
-    padding:12px;
+    height: calc(100% - 58px - 120px);
+    padding: 12px;
     overflow:auto;
     scroll-behavior:smooth;
   }
-  .ai-msg{ display:flex; margin:10px 0; }
+
+  .ai-msg{ display:flex; margin: 10px 0; }
   .ai-msg.user{ justify-content:flex-start; }
   .ai-msg.bot{ justify-content:flex-end; }
+
   .ai-bubble{
-    max-width: 92%;
+    max-width: 86%;
     padding: 10px 12px;
-    border-radius: 14px;
+    border-radius: 16px;
+    line-height: 1.75;
+    font-size: 14.5px;  /* أكبر شوي للوضوح */
+    font-weight: 750;
     border:1px solid var(--ai-border);
     white-space: pre-wrap;
     word-break: break-word;
-    line-height: 1.85;
-    font-size: 13px;          /* أصغر */
-    font-weight: 850;
   }
-  .ai-msg.user .ai-bubble{ background: rgba(255,255,255,.06); }
+  .ai-msg.user .ai-bubble{
+    background: rgba(255,255,255,.06);
+    color: var(--ai-text);
+  }
   .ai-msg.bot .ai-bubble{
     background: rgba(34,197,94,.14);
-    border-color: rgba(34,197,94,.18);
+    border:1px solid rgba(34,197,94,.22);
+    color: var(--ai-text);
   }
 
-  /* Footer (smaller input + smaller send) */
-  .ai-footer{
-    height: 116px; /* أصغر */
-    padding:12px;
+  .ai-foot{
+    height: 120px; /* أصغر من قبل */
+    padding: 12px;
     border-top:1px solid var(--ai-border);
-    background: rgba(0,0,0,.22);
+    background: rgba(0,0,0,.25);
     display:flex;
     flex-direction:column;
     gap:10px;
   }
-  .ai-row{ display:flex; gap:10px; align-items:stretch; flex:1; }
+
+  .ai-compose{
+    display:flex;
+    gap:10px;
+    align-items:stretch;
+  }
   .ai-input{
     flex:1;
     width:100%;
-    resize:none;
-    border:1px solid rgba(255,255,255,.14);
+    min-height: 54px;
+    max-height: 120px;
+    resize: none; /* ثابت ومرتب */
+    border:1px solid var(--ai-border);
     background: rgba(255,255,255,.06);
     color: var(--ai-text);
     border-radius: 14px;
-    padding: 10px 12px;
-    outline:none;
-    font-weight: 850;
-    font-size: 13px;
+    padding: 12px 12px;
+    outline: none;
+    font-weight: 750;
+    font-size: 14px;
     line-height: 1.7;
-    min-height: 56px;   /* أصغر */
-    max-height: 96px;
   }
   .ai-send{
-    width: 92px; /* أصغر */
+    width: 110px;
     border:0;
     background: var(--ai-accent);
     color: var(--ai-accentText);
     border-radius: 14px;
-    padding: 10px 12px;
-    font-weight: 1100;
+    padding: 12px 14px;
+    font-weight: 1000;
     cursor:pointer;
     white-space: nowrap;
-    font-size: 13px;
   }
-  .ai-send:disabled{ opacity:.6; cursor:not-allowed; }
+  .ai-send:disabled{ opacity:.55; cursor:not-allowed; }
 
-  .ai-hint{
-    display:flex; justify-content:space-between; gap:10px; align-items:center;
-    font-size:11px; color: var(--ai-muted); font-weight:800;
-  }
-  .ai-hint span{
-    background: rgba(255,255,255,.06);
-    border:1px solid rgba(255,255,255,.08);
-    padding:5px 9px;
-    border-radius:999px;
+  .ai-note{
+    font-size:12px;
+    color: rgba(255,255,255,.60);
+    line-height:1.5;
   }
 
-  @media (max-width:520px){
+  /* Mobile / iPad */
+  @media (max-width: 520px){
     .ai-panel{
-      left:10px; bottom:64px;
+      left: 10px;
+      bottom: 70px;
       width: calc(100vw - 20px);
-      height: calc(100vh - 110px);
+      height: calc(100vh - 120px);
       border-radius: 16px;
     }
-    .ai-body{ height: calc(100% - 48px - 56px - 140px); }
-    .ai-footer{
-      height: 140px;
+    .ai-body{ height: calc(100% - 58px - 160px); }
+    .ai-foot{
+      height: 160px;
       padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
     }
-    .ai-row{ flex-direction:column; }
-    .ai-send{ width:100%; min-height:46px; }
-    .ai-input{ min-height:66px; }
+    .ai-compose{ flex-direction: column; }
+    .ai-send{ width: 100%; min-height: 48px; }
+    .ai-input{ min-height: 70px; }
   }
 </style>
 
-<div class="ai-fab">
+<div class="ai-fab" aria-live="polite">
   <button class="ai-open" id="aiOpenBtn" type="button">
     💬 <span>مساعد القبول</span>
-    <span class="ai-status" id="aiStatus">جاهز</span>
+    <span class="ai-pill" id="aiStatus">جاهز</span>
   </button>
 </div>
 
 <section class="ai-panel" id="aiPanel" aria-label="مساعد القبول العسكري">
   <header class="ai-head">
     <div class="ai-title">
-      <strong>مساعد القبول العسكري</strong>
-      <span>إرشاد عام + خطة تحسين</span>
+      <strong>مساعد القبول العسكري (توعوي)</strong>
+      <span>إجابة + خطة تحسين مختصرة</span>
     </div>
-    <div class="ai-actions">
-      <button class="ai-btn" id="aiResetBtn" type="button">مسح</button>
-      <button class="ai-btn" id="aiCloseBtn" type="button">إغلاق</button>
-    </div>
+    <button class="ai-close" id="aiCloseBtn" type="button">إغلاق</button>
   </header>
-
-  <div class="ai-bar">
-    <div class="ai-chip">
-      الموديل
-      <select class="ai-select" id="aiModelSel">
-        <option value="Llama-3.1-8B-Instruct-q4f32_1">Llama 3.1 8B (أقوى)</option>
-        <option value="Llama-3.2-3B-Instruct-q4f32_1">Llama 3.2 3B (أخف)</option>
-        <option value="Phi-3.5-mini-instruct-q4f32_1">Phi 3.5 mini (خفيف)</option>
-      </select>
-    </div>
-    <div class="ai-info" id="aiInfo">جاهز.</div>
-  </div>
 
   <div class="ai-body" id="aiBody">
     <div class="ai-msg bot">
       <div class="ai-bubble">
-        هلا 👋 اكتب سؤالك عن القبول أو تحسين ملفك (قدرات/تحصيلي/STEP/دورات/سنة التخرج…).
+هلا 👋
+اكتب درجاتك (معدل/قدرات/تحصيلي/STEP/سنة التخرج) وهدفك، وأعطيك تشخيص واضح + خطة رفع فرصك.
       </div>
     </div>
   </div>
 
-  <footer class="ai-footer">
-    <div class="ai-row">
-      <textarea class="ai-input" id="aiInput" placeholder="مثال: معدلي 86 وقدرات 72 وتحصيلي 68… كيف أرفع فرصتي؟" rows="3"></textarea>
+  <footer class="ai-foot">
+    <div class="ai-compose">
+      <textarea class="ai-input" id="aiInput"
+        placeholder="مثال: معدلي 86، قدرات 72، تحصيلي 68، تخرج 2024… وش أفضل خطة أرفع بها فرصتي؟"></textarea>
       <button class="ai-send" id="aiSendBtn" type="button">إرسال</button>
     </div>
-    <div class="ai-hint">
-      <span>Enter إرسال</span>
-      <span>Shift+Enter سطر جديد</span>
+
+    <div class="ai-note">
+      تنبيه: مساعد توعوي غير تابع لأي جهة رسمية، وقد تختلف الشروط حسب الإعلان الرسمي.
     </div>
   </footer>
 </section>
 
-<script type="module">
-  import * as webllm from "https://esm.run/@mlc-ai/web-llm";
+<script>
+  // ====== CONFIG ======
+  // ضع رابط Cloudflare Worker هنا:
+  const AI_ENDPOINT = "PUT_YOUR_WORKER_URL_HERE"; // مثال: https://military-ai.xxx.workers.dev
 
-  const ui = {
+  const ai = {
     openBtn: document.getElementById("aiOpenBtn"),
     closeBtn: document.getElementById("aiCloseBtn"),
-    resetBtn: document.getElementById("aiResetBtn"),
     panel: document.getElementById("aiPanel"),
     body: document.getElementById("aiBody"),
     input: document.getElementById("aiInput"),
     sendBtn: document.getElementById("aiSendBtn"),
     status: document.getElementById("aiStatus"),
-    info: document.getElementById("aiInfo"),
-    modelSel: document.getElementById("aiModelSel"),
-  };
-
-  const state = {
-    engine: null,
-    ready: false,
     busy: false,
-    messages: [
-      {
-        role: "system",
-        content:
-`أنت مساعد عربي متخصص في إرشاد القبول العسكري داخل السعودية بشكل توعوي.
-أسلوب الرد: رسمي وواضح ومختصر ثم خطة.
-ممنوع تمامًا: اقتراح "افتح هذا البحث" أو وضع روابط Google أو أي رابط بحث.
-إذا احتجت مصدر: قل "راجع الإعلان الرسمي في الجهة" بدون روابط.
-لا تزعم أنك جهة رسمية ولا تقدم وعود قبول.
-إذا نقصت معلومات اسأل أسئلة محددة.`
-      }
-    ]
+    session: []
   };
 
-  function setStatus(t){ ui.status.textContent = t; }
-  function setBusy(v){
-    state.busy = v;
-    ui.sendBtn.disabled = v;
-    setStatus(v ? "يفكر…" : (state.ready ? "جاهز" : "تحميل…"));
-  }
-  function scrollBottom(){ ui.body.scrollTop = ui.body.scrollHeight; }
   function escapeHtml(s){
     return String(s)
       .replaceAll("&","&amp;")
@@ -1627,165 +1593,88 @@
       .replaceAll('"',"&quot;")
       .replaceAll("'","&#039;");
   }
-
-  // إزالة أي روابط/سطر "افتح هذا البحث" نهائيًا (حتى لو الموديل حاول يكتبها)
-  function sanitizeAnswer(text){
-    let t = String(text || "");
-
-    // احذف أي سطر يحتوي على "افتح هذا البحث" أو "إذا تبغى المصدر الرسمي"
-    t = t.replace(/^.*(افتح هذا البحث|إذا تبغى المصدر الرسمي).*$/gmi, "");
-
-    // احذف روابط Google search بالكامل
-    t = t.replace(/https?:\/\/(www\.)?google\.com\/search\?[^\s]+/gmi, "");
-    t = t.replace(/https?:\/\/(www\.)?google\.[^\s]+/gmi, ""); // احتياط
-
-    // احذف أي URL بشكل عام لو تبغى (اختياري) — حاليًا نخلي الروابط عامة مسموحة؟
-    // لو تبي منع الروابط كلها نهائيًا فك السطرين الجاي:
-    // t = t.replace(/https?:\/\/\S+/gmi, "");
-    // t = t.replace(/www\.\S+/gmi, "");
-
-    // نظافة فراغات
-    t = t.replace(/\n{3,}/g, "\n\n").trim();
-    return t || "تمام. اكتب تفاصيل أكثر (المعدل/القدرات/التحصيلي/الطول/الوزن/العمر) عشان أعطيك خطة دقيقة.";
-  }
+  function scrollToBottom(){ ai.body.scrollTop = ai.body.scrollHeight; }
 
   function addMsg(role, text){
     const wrap = document.createElement("div");
     wrap.className = "ai-msg " + (role === "user" ? "user" : "bot");
+
     const bubble = document.createElement("div");
     bubble.className = "ai-bubble";
     bubble.innerHTML = escapeHtml(text || "");
+
     wrap.appendChild(bubble);
-    ui.body.appendChild(wrap);
-    scrollBottom();
-    return bubble;
+    ai.body.appendChild(wrap);
+    scrollToBottom();
   }
 
-  function addTyping(){
-    const wrap = document.createElement("div");
-    wrap.className = "ai-msg bot";
-    const bubble = document.createElement("div");
-    bubble.className = "ai-bubble";
-    bubble.textContent = "…";
-    wrap.appendChild(bubble);
-    ui.body.appendChild(wrap);
-    scrollBottom();
-    return {wrap, bubble};
+  function setBusy(v){
+    ai.busy = v;
+    ai.sendBtn.disabled = v;
+    ai.status.textContent = v ? "يفكر…" : "جاهز";
   }
 
-  async function ensureEngine(){
-    if(state.engine && state.ready) return true;
-
-    const modelId = ui.modelSel.value;
-    setStatus("تحميل…");
-    ui.info.textContent = "جاري تشغيل الذكاء محليًا…";
-
-    try{
-      const initProgressCallback = (r)=>{
-        if(r?.text) ui.info.textContent = r.text;
-      };
-      state.engine = await webllm.CreateMLCEngine(modelId, { initProgressCallback });
-      state.ready = true;
-      ui.info.textContent = "جاهز.";
-      setStatus("جاهز");
-      return true;
-    }catch(e){
-      console.error(e);
-      state.ready = false;
-      ui.info.textContent = "فشل التشغيل. جرّب موديل أخف أو Chrome/Edge.";
-      setStatus("غير متاح");
-      addMsg("assistant","ما قدرت أشغّل الذكاء محليًا على هذا الجهاز/المتصفح. اختر موديل أخف أو افتح الموقع بمتصفح Chrome/Edge.");
-      return false;
-    }
+  // Smooth toggle (click on button toggles open/close)
+  function openPanel(){
+    ai.panel.classList.add("open");
+    setTimeout(()=> ai.input.focus(), 60);
+    scrollToBottom();
+  }
+  function closePanel(){
+    ai.panel.classList.remove("open");
   }
 
-  async function send(){
-    const q = (ui.input.value || "").trim();
-    if(!q || state.busy) return;
+  ai.openBtn.onclick = ()=> {
+    if (ai.panel.classList.contains("open")) closePanel();
+    else openPanel();
+  };
+  ai.closeBtn.onclick = closePanel;
 
-    if(!state.ready){
-      const ok = await ensureEngine();
-      if(!ok) return;
-    }
+  async function aiSend(){
+    const q = (ai.input.value || "").trim();
+    if (!q || ai.busy) return;
 
     addMsg("user", q);
-    state.messages.push({ role:"user", content:q });
-
-    ui.input.value = "";
+    ai.session.push({ role:"user", content:q });
+    ai.input.value = "";
     setBusy(true);
 
-    const {wrap, bubble} = addTyping();
-
     try{
-      const stream = await state.engine.chat.completions.create({
-        messages: state.messages.slice(-16),
-        temperature: 0.65,
-        max_tokens: 800,
-        stream: true,
+      const res = await fetch(AI_ENDPOINT, {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ q, session: ai.session.slice(-12) })
       });
 
-      let out = "";
-      for await (const chunk of stream){
-        const delta = chunk?.choices?.[0]?.delta?.content || "";
-        out += delta;
-        bubble.textContent = sanitizeAnswer(out) || "…";
-        scrollBottom();
-      }
+      const data = await res.json().catch(()=> ({}));
+      if(!res.ok) throw new Error(data?.error || "Request failed");
 
-      const finalText = sanitizeAnswer(out);
-      wrap.remove();
-      addMsg("assistant", finalText);
-      state.messages.push({ role:"assistant", content: finalText });
+      const text = (data?.text || "").trim() || "اكتب سؤالك بتفاصيل أكثر (درجاتك/سنة تخرجك/هدفك).";
+      addMsg("assistant", text);
+      ai.session.push({ role:"assistant", content:text });
 
     }catch(e){
-      console.error(e);
-      wrap.remove();
-      addMsg("assistant","صار خطأ أثناء توليد الرد. جرّب موديل أخف أو حدّث الصفحة.");
+      addMsg("assistant", "تعذر الاتصال الآن. تأكد أن رابط الـ Worker صحيح وأن الـ API Key مضاف كـ Secret ثم جرّب.");
     }finally{
       setBusy(false);
     }
   }
 
-  // open/close
-  ui.openBtn.onclick = ()=>{
-    ui.panel.style.display = "block";
-    setTimeout(()=> ui.input.focus(), 40);
-    scrollBottom();
-  };
-  ui.closeBtn.onclick = ()=> ui.panel.style.display = "none";
+  ai.sendBtn.onclick = aiSend;
 
-  // reset
-  ui.resetBtn.onclick = ()=>{
-    ui.body.innerHTML = `
-      <div class="ai-msg bot">
-        <div class="ai-bubble">هلا 👋 اكتب سؤالك عن القبول أو تحسين ملفك (قدرات/تحصيلي/STEP/دورات/سنة التخرج…).<\/div>
-      </div>`;
-    state.messages = state.messages.filter(m => m.role === "system");
-    scrollBottom();
-  };
-
-  ui.sendBtn.onclick = send;
-
-  ui.input.addEventListener("keydown",(e)=>{
+  // Enter = send | Shift+Enter = new line
+  ai.input.addEventListener("keydown", (e)=>{
     if(e.key === "Enter" && !e.shiftKey){
       e.preventDefault();
-      send();
+      aiSend();
     }
   });
-
-  ui.modelSel.addEventListener("change", ()=>{
-    state.engine = null;
-    state.ready = false;
-    ui.info.textContent = "تم تغيير الموديل. أرسل رسالة للتشغيل.";
-    setStatus("جاهز");
-  });
-
-  setStatus("جاهز");
 </script>
-<!-- ====== END LUX AI WIDGET ====== -->
+<!-- ================== END AI CHAT WIDGET ================== -->
 </body>
 
 </html>
+
 
 
 
