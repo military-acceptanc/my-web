@@ -4,193 +4,183 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>من نحن</title>
-  <meta name="description" content="صفحة من نحن - فريق سعودي مستقل يقدم محتوى توعوي وإرشادي حول القبول العسكري." />
+  <meta name="description" content="من نحن - فريق سعودي يقدم محتوى توعوي وإرشادي عن متطلبات القبول العسكري وتحسين الملف." />
 
   <style>
     :root{
       --bg:#0b1220;
-      --card:#0f1b2e;
-      --text:rgba(255,255,255,.92);
-      --muted:rgba(255,255,255,.70);
-      --line:rgba(255,255,255,.10);
+      --card: rgba(255,255,255,.06);
+      --line: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
       --accent:#22c55e;
     }
+    *{box-sizing:border-box}
     body{
       margin:0;
       font-family: system-ui, -apple-system, "Segoe UI", Tahoma, Arial;
-      background: radial-gradient(900px 500px at 20% 10%, rgba(34,197,94,.18), transparent 60%),
-                  radial-gradient(800px 500px at 80% 0%, rgba(59,130,246,.12), transparent 55%),
-                  var(--bg);
+      background:
+        radial-gradient(900px 500px at 20% 10%, rgba(34,197,94,.18), transparent 60%),
+        radial-gradient(800px 500px at 80% 20%, rgba(59,130,246,.12), transparent 55%),
+        var(--bg);
       color:var(--text);
     }
-    .wrap{
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 22px 16px 46px;
-    }
+
     .topbar{
+      position: sticky;
+      top:0;
+      z-index: 10;
       display:flex;
       justify-content:space-between;
       align-items:center;
       gap:12px;
-      margin-bottom: 14px;
+      padding:12px 14px;
+      background: rgba(10,12,16,.92);
+      border-bottom:1px solid var(--line);
+      backdrop-filter: blur(10px);
     }
     .brand{
-      display:flex; align-items:center; gap:10px;
-      font-weight:900;
-      letter-spacing:.2px;
-    }
-    .dot{
-      width:10px;height:10px;border-radius:50%;
-      background: var(--accent);
-      box-shadow: 0 0 18px rgba(34,197,94,.55);
-    }
-    .nav a{
-      color:var(--muted);
+      font-weight: 1000;
       text-decoration:none;
-      border:1px solid var(--line);
+      color: var(--text);
+      font-size: 14px;
+    }
+    .btn{
+      text-decoration:none;
+      color: var(--text);
+      font-weight: 900;
+      font-size: 13px;
       padding:10px 12px;
-      border-radius:999px;
+      border:1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,.06);
       display:inline-flex;
       align-items:center;
       gap:8px;
-      transition:.15s;
     }
-    .nav a:hover{ color:var(--text); border-color:rgba(255,255,255,.18); transform: translateY(-1px); }
+
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 22px 14px 40px;
+    }
 
     .hero{
       border:1px solid var(--line);
-      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      background: rgba(255,255,255,.05);
       border-radius: 18px;
-      padding: 18px 16px;
-      margin-bottom: 14px;
+      padding: 18px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.35);
     }
-    h1{ margin:0 0 6px; font-size: 22px; }
-    .subtitle{ margin:0; color:var(--muted); line-height:1.8; }
+    .hero h1{
+      margin:0 0 8px;
+      font-size: 20px;
+      letter-spacing: .2px;
+    }
+    .hero p{
+      margin:0;
+      color: var(--muted);
+      line-height: 1.9;
+      font-weight: 650;
+    }
 
     .grid{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap: 14px;
       margin-top: 14px;
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
     }
     .card{
+      grid-column: span 6;
       border:1px solid var(--line);
-      background: rgba(15,27,46,.72);
+      background: var(--card);
       border-radius: 18px;
       padding: 16px;
     }
     .card h2{
-      margin:0 0 10px;
-      font-size: 16px;
-      display:flex;
-      align-items:center;
-      gap:10px;
+      margin:0 0 8px;
+      font-size: 15px;
+    }
+    .card ul{
+      margin:0;
+      padding:0 18px 0 0;
+      color: var(--muted);
+      line-height: 1.9;
+      font-weight: 650;
     }
     .pill{
-      font-size:12px;
-      color:rgba(7,21,11,.95);
-      background: rgba(34,197,94,.95);
-      padding: 4px 10px;
-      border-radius:999px;
-      font-weight:900;
-    }
-    ul{ margin: 10px 0 0; padding:0 18px 0 0; color:var(--muted); line-height:1.9; }
-    li{ margin: 6px 0; }
-    p{ margin:0; color:var(--muted); line-height:1.9; }
-
-    .note{
-      margin-top: 14px;
-      border:1px dashed rgba(255,255,255,.18);
-      background: rgba(0,0,0,.25);
-      border-radius: 18px;
-      padding: 14px;
-      color: rgba(255,255,255,.78);
-      line-height:1.9;
-    }
-    .note strong{ color: var(--text); }
-
-    footer{
-      margin-top: 18px;
-      color: rgba(255,255,255,.55);
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius: 999px;
+      border:1px solid rgba(34,197,94,.30);
+      background: rgba(34,197,94,.14);
+      color: rgba(255,255,255,.92);
+      font-weight: 900;
       font-size: 12px;
-      text-align:center;
+      margin-top: 10px;
     }
 
-    @media (max-width: 860px){
-      .grid{ grid-template-columns: 1fr; }
+    .footer{
+      margin-top: 14px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      border-radius: 18px;
+      padding: 14px 16px;
+      color: var(--muted);
+      line-height: 1.9;
+      font-weight: 650;
+      font-size: 13px;
+    }
+
+    @media (max-width: 760px){
+      .card{ grid-column: span 12; }
+      .hero h1{ font-size: 18px; }
     }
   </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <div class="topbar">
-      <div class="brand">
-        <span class="dot"></span>
-        <span>من نحن</span>
-      </div>
-      <div class="nav">
-        <!-- عدّل الرابط إذا صفحتك الرئيسية اسمها غير index.html -->
-        <a href="index.html">⬅️ الرجوع للرئيسية</a>
-      </div>
-    </div>
+  <div class="topbar">
+    <a class="brand" href="./index.html">مؤشر القبول</a>
+    <a class="btn" href="./index.html">رجوع للرئيسية</a>
+  </div>
 
+  <main class="wrap">
     <section class="hero">
       <h1>من نحن</h1>
-      <p class="subtitle">
-        نحن فريق سعودي مستقل نعمل على تقديم محتوى <strong>توعوي وإرشادي</strong> حول القبول العسكري والجهات ذات العلاقة،
-        بهدف مساعدة المتقدمين على فهم المتطلبات، تجهيز ملفاتهم، وتجنّب الأخطاء الشائعة قبل وأثناء التقديم.
+      <p>
+        نحن مجموعة أشخاص سعوديين نعمل على تقديم محتوى توعوي وإرشادي يساعد المتقدمين على فهم متطلبات القبول العسكري
+        وتحسين ملفهم بشكل عملي. هذا الموقع ليس تابعًا لأي جهة رسمية، ولا يمثل جهة حكومية أو عسكرية.
       </p>
+      <div class="pill">هدفنا: توعية + رفع جاهزية المتقدم</div>
     </section>
 
     <section class="grid">
       <div class="card">
-        <h2>هدفنا <span class="pill">توعية</span></h2>
-        <ul>
-          <li>رفع وعي المتقدمين بمتطلبات القبول وآلية الاستعداد للتقديم.</li>
-          <li>مساعدة المتقدم على تقييم وضعه الحالي بشكل <strong>تقديري</strong> وفهم نقاط القوة والضعف.</li>
-          <li>تقديم إرشادات عملية لتحسين الجاهزية قبل فتح التقديمات.</li>
-          <li>توضيح الأخطاء المتكررة التي تسبب رفضًا أو نقصًا في البيانات.</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h2>تنويه مهم</h2>
-        <p>
-          هذا الموقع <strong>غير تابع لأي جهة رسمية</strong> ولا يمثل وزارة الدفاع أو أي قطاع عسكري أو أمني.
-          جميع المعلومات المقدمة مبنية على مصادر عامة وتجارب متداولة وتحليل إرشادي،
-          وقد تختلف الشروط والآليات من إعلان لآخر حسب الجهة والوقت.
-        </p>
-      </div>
-
-      <div class="card">
         <h2>ماذا نقدم؟</h2>
         <ul>
-          <li>إرشادات عامة حول القبول العسكري (توعوي).</li>
-          <li>توضيح المتطلبات الشائعة: معدل، قدرات، تحصيلي، STEP، لياقة…</li>
-          <li>تنبيهات مهمة قبل التقديم وأثناء تعبئة البيانات.</li>
-          <li>أدوات ومحتوى يساعدك على تنظيم بياناتك والاستعداد بشكل أفضل.</li>
+          <li>شرح مبسط لمفاهيم ومتطلبات القبول حسب ما يُعلن رسميًا.</li>
+          <li>مساعدة في ترتيب الأولويات: قدرات/تحصيلي/STEP/لياقة/دورات.</li>
+          <li>نصائح عملية لتحسين الملف وتفادي الأخطاء الشائعة.</li>
         </ul>
       </div>
 
       <div class="card">
-        <h2>ردًا على المشككين</h2>
-        <p>
-          نسمع أحيانًا اتهامات أو تشكيك في نوايانا. باختصار: هدفنا <strong>التوعية فقط</strong>.
-          المحتوى الموجود هنا يساعدك على معرفة نقاط ضعفك وتقوية نفسك والاشتغال على تطوير مستواك،
-          والمرجع النهائي دائمًا هو الإعلان الرسمي الصادر من الجهة المعنية.
-        </p>
+        <h2>توضيح مهم</h2>
+        <ul>
+          <li>نحن لا نصدر قرارات قبول أو رفض، ولا نضمن القبول.</li>
+          <li>أي اشتراطات نهائية تعتمد على الإعلان الرسمي للجهة.</li>
+          <li>أي تشكيك بأن الهدف “غير التوعية” غير صحيح — هدفنا الإرشاد فقط.</li>
+        </ul>
       </div>
     </section>
 
-    <div class="note">
-      <strong>تنبيه:</strong> هذا الموقع مساعد إرشادي غير رسمي، ولا يقدم ضمانات للقبول. القبول النهائي يخضع لشروط الجهة المُعلِنة وقت التقديم.
+    <div class="footer">
+      تنبيه: المعلومات هنا إرشادية وقد تتغير. المرجع النهائي دائمًا هو الإعلان الرسمي للجهة المُعلِنة.
+      إذا وجدت معلومة تحتاج تصحيحًا، راسلنا عبر قنواتنا لنراجعها ونحدثها.
     </div>
-
-    <footer>
-      © جميع الحقوق محفوظة — محتوى توعوي وإرشادي.
-    </footer>
-  </div>
+  </main>
 </body>
 </html>
