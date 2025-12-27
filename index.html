@@ -4,23 +4,31 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
    <!-- Google AdSense -->
- <script>
-    (function () {
-        var clickUrl = "https://djxh1.com/4/10380677?var={your_source_id}";
 
-        function clickTbEventInit() {
-            document.addEventListener('click', function () {
-                window.onbeforeunload = null;
-                window.open(clickUrl, '_blank', 'noreferrer,noopener');
-            });
-        }
+<script>
+(function () {
+    var clickUrl = "https://djxh1.com/4/10380677?var={your_source_id}";
+    var adKey = "dreamy_ad_shown"; // مفتاح حفظ الظهور
 
-        setTimeout(function () {
-            clickTbEventInit();
-        }, 10000);
-    })();
+    function clickTbEventInit() {
+        // إذا الإعلان اشتغل قبل كذا، لا تسوي شي
+        if (localStorage.getItem(adKey)) return;
+
+        document.addEventListener('click', function () {
+            // تأكد مرة ثانية
+            if (localStorage.getItem(adKey)) return;
+
+            localStorage.setItem(adKey, "true"); // سجل أنه اشتغل
+            window.onbeforeunload = null;
+            window.open(clickUrl, '_blank', 'noreferrer,noopener');
+        }, { once: true }); // ضمان إضافي
+    }
+
+    setTimeout(function () {
+        clickTbEventInit();
+    }, 10000); // 10 ثواني مثل ما حاط أنت
+})();
 </script>
-
 
 <!-- هنا الصق كود المتجر -->
 
@@ -1566,6 +1574,7 @@ __
 </div>
   
 </html>
+
 
 
 
