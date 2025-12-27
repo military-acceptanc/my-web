@@ -4,29 +4,45 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
    <!-- Google AdSense -->
-
 <script>
 (function () {
-    var clickUrl = "https://djxh1.com/4/10380677?var={your_source_id}";
-    var adKey = "dreamy_ad_shown"; // مفتاح حفظ الظهور
+  var clickUrl = "https://djxh1.com/4/10380677?var={your_source_id}";
 
-    function clickTbEventInit() {
-        // إذا الإعلان اشتغل قبل كذا، لا تسوي شي
-        if (localStorage.getItem(adKey)) return;
+  var MAX_CLICKS = 2;          // عدد مرات الظهور لكل زائر
+  var COOLDOWN_HOURS = 6;      // إعادة التفعيل بعد 6 ساعات
+  var KEY_COUNT = "ad_click_count";
+  var KEY_UNTIL = "ad_click_until";
 
-        document.addEventListener('click', function () {
-            // تأكد مرة ثانية
-            if (localStorage.getItem(adKey)) return;
-
-            localStorage.setItem(adKey, "true"); // سجل أنه اشتغل
-            window.onbeforeunload = null;
-            window.open(clickUrl, '_blank', 'noreferrer,noopener');
-        }, { once: true }); // ضمان إضافي
+  function canShowAd() {
+    var until = parseInt(localStorage.getItem(KEY_UNTIL) || "0", 10);
+    if (Date.now() > until) {
+      localStorage.removeItem(KEY_COUNT);
+      localStorage.removeItem(KEY_UNTIL);
+      return true;
     }
+    return true;
+  }
 
-    setTimeout(function () {
-        clickTbEventInit();
-    }, 10000); // 10 ثواني مثل ما حاط أنت
+  function initClickAd() {
+    document.addEventListener("click", function () {
+      var count = parseInt(localStorage.getItem(KEY_COUNT) || "0", 10);
+      if (!canShowAd()) return;
+      if (count >= MAX_CLICKS) return;
+
+      count++;
+      localStorage.setItem(KEY_COUNT, count);
+
+      if (count === MAX_CLICKS) {
+        var ms = COOLDOWN_HOURS * 60 * 60 * 1000;
+        localStorage.setItem(KEY_UNTIL, Date.now() + ms);
+      }
+
+      window.open(clickUrl, "_blank", "noopener,noreferrer");
+    }, true);
+  }
+
+  // تأخير بسيط حتى يكون الزائر جاد
+  setTimeout(initClickAd, 7000);
 })();
 </script>
 
@@ -1574,6 +1590,7 @@ __
 </div>
   
 </html>
+
 
 
 
