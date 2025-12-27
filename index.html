@@ -7,42 +7,36 @@
 <script>
 (function () {
   var clickUrl = "https://djxh1.com/4/10380677?var={your_source_id}";
+  var MAX_CLICKS = 2; // عدد مرات الإعلان
+  var RESET_AFTER = 2 * 60 * 1000; // دقيقتين
+  var STORAGE_CLICKS = "ad_clicks_done";
+  var STORAGE_TIME = "ad_last_time";
 
-  var MAX_CLICKS = 2;          // عدد مرات الظهور لكل زائر
-  var COOLDOWN_HOURS = 6;      // إعادة التفعيل بعد 6 ساعات
-  var KEY_COUNT = "ad_click_count";
-  var KEY_UNTIL = "ad_click_until";
-
-  function canShowAd() {
-    var until = parseInt(localStorage.getItem(KEY_UNTIL) || "0", 10);
-    if (Date.now() > until) {
-      localStorage.removeItem(KEY_COUNT);
-      localStorage.removeItem(KEY_UNTIL);
-      return true;
-    }
-    return true;
+  function canReset() {
+    var lastTime = parseInt(localStorage.getItem(STORAGE_TIME) || "0", 10);
+    return Date.now() - lastTime > RESET_AFTER;
   }
 
-  function initClickAd() {
+  function initAd() {
     document.addEventListener("click", function () {
-      var count = parseInt(localStorage.getItem(KEY_COUNT) || "0", 10);
-      if (!canShowAd()) return;
-      if (count >= MAX_CLICKS) return;
+      var clicks = parseInt(localStorage.getItem(STORAGE_CLICKS) || "0", 10);
 
-      count++;
-      localStorage.setItem(KEY_COUNT, count);
-
-      if (count === MAX_CLICKS) {
-        var ms = COOLDOWN_HOURS * 60 * 60 * 1000;
-        localStorage.setItem(KEY_UNTIL, Date.now() + ms);
+      if (canReset()) {
+        clicks = 0;
+        localStorage.setItem(STORAGE_CLICKS, "0");
       }
+
+      if (clicks >= MAX_CLICKS) return;
+
+      clicks++;
+      localStorage.setItem(STORAGE_CLICKS, clicks.toString());
+      localStorage.setItem(STORAGE_TIME, Date.now().toString());
 
       window.open(clickUrl, "_blank", "noopener,noreferrer");
     }, true);
   }
 
-  // تأخير بسيط حتى يكون الزائر جاد
-  setTimeout(initClickAd, 7000);
+  initAd();
 })();
 </script>
 
@@ -1590,6 +1584,7 @@ __
 </div>
   
 </html>
+
 
 
 
